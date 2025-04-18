@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balance Sheet Creator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1, h2 {
+            color: #a7f070;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background-color: #2c2c2c;
+            border: 1px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideIn 0.4s ease-out forwards;
+            animation-delay: calc(0.1s * var(--section-index));
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        label {
+            display: inline-block;
+            width: 180px;
+            text-align: right;
+            margin-right: 15px;
+            color: #d4d4d4;
+        }
+
+        input[type="number"] {
+            background-color: #333;
+            color: #a7f070;
+            border: 1px solid #555;
+            padding: 8px;
+            border-radius: 4px;
+            width: 150px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #a7f070;
+            box-shadow: 0 0 5px rgba(167, 240, 112, 0.5);
+        }
+
+        input[type="number"]:hover {
+            border-color: #8ee75d;
+            box-shadow: 0 0 7px rgba(167, 240, 112, 0.3);
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #555;
+            color: #a7f070;
+        }
+
+        button {
+            background-color: #a7f070;
+            color: #1e1e1e;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #8ee75d;
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        #balanceSheetOutput {
+            background-color: #2c2c2c;
+            border: 1px solid #333;
+            padding: 20px;
+            margin-top: 30px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.4s ease-out forwards 0.3s;
+        }
+
+        #balanceSheetOutput p {
+            margin-bottom: 10px;
+        }
+
+        #balanceCheck {
+            margin-top: 15px;
+            font-size: 1.1em;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #balanceCheck.balanced {
+            color: #a7f070;
+            transform: scale(1.05);
+        }
+
+        #balanceCheck.not-balanced {
+            color: #ff6b6b;
+            transform: scale(1.05);
+        }
+
+        #resetButton {
+            background-color: #f44336;
+            color: #f0f0f0;
+            margin-left: 15px;
+        }
+
+        #resetButton:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Balance Sheet Creator</h1>
+
+    <div class="section" id="assets" style="--section-index: 1;">
+        <h2>Assets</h2>
+        <div class="item">
+            <label for="cash">Cash:</label>
+            <input type="number" id="cash" value="0">
+        </div>
+        <div class="item">
+            <label for="accountsReceivable">Accounts Receivable:</label>
+            <input type="number" id="accountsReceivable" value="0">
+        </div>
+        <div class="total">Total Assets: <span id="totalAssets">0</span></div>
+    </div>
+
+    <div class="section" id="liabilities" style="--section-index: 2;">
+        <h2>Liabilities</h2>
+        <div class="item">
+            <label for="accountsPayable">Accounts Payable:</label>
+            <input type="number" id="accountsPayable" value="0">
+        </div>
+        <div class="item">
+            <label for="shortTermLoans">Short-Term Loans:</label>
+            <input type="number" id="shortTermLoans" value="0">
+        </div>
+        <div class="total">Total Liabilities: <span id="totalLiabilities">0</span></div>
+    </div>
+
+    <div class="section" id="equity" style="--section-index: 3;">
+        <h2>Equity</h2>
+        <div class="item">
+            <label for="ownersCapital">Owner's Capital:</label>
+            <input type="number" id="ownersCapital" value="0">
+        </div>
+        <div class="item">
+            <label for="retainedEarnings">Retained Earnings:</label>
+            <input type="number" id="retainedEarnings" value="0">
+        </div>
+        <div class="total">Total Equity: <span id="totalEquity">0</span></div>
+    </div>
+
+    <div>
+        <button id="saveButton">Save Balance Sheet</button>
+        <button id="resetButton">Reset</button>
+    </div>
+
+    <div id="balanceSheetOutput" style="--section-index: 4;">
+        <h2>Balance Sheet</h2>
+        <p><strong>Assets:</strong> <span id="balanceSheetAssets">0</span></p>
+        <p><strong>Liabilities:</strong> <span id="balanceSheetLiabilities">0</span></p>
+        <p><strong>Equity:</strong> <span id="balanceSheetEquity">0</span></p>
+        <p class="total"><strong>Liabilities and Equity:</strong> <span id="totalLiabilitiesAndEquity">0</span></p>
+        <p id="balanceCheck" style="font-weight: bold;"></p>
+    </div>
+
+    <script>
+        const cashInput = document.getElementById('cash');
+        const accountsReceivableInput = document.getElementById('accountsReceivable');
+        const assetInputs = [cashInput, accountsReceivableInput];
+
+        const accountsPayableInput = document.getElementById('accountsPayable');
+        const shortTermLoansInput = document.getElementById('shortTermLoans');
+        const liabilityInputs = [accountsPayableInput, shortTermLoansInput];
+
+        const ownersCapitalInput = document.getElementById('ownersCapital');
+        const retainedEarningsInput = document.getElementById('retainedEarnings');
+        const equityInputs = [ownersCapitalInput, retainedEarningsInput];
+
+        const totalAssetsSpan = document.getElementById('totalAssets');
+        const totalLiabilitiesSpan = document.getElementById('totalLiabilities');
+        const totalEquitySpan = document.getElementById('totalEquity');
+
+        const balanceSheetAssetsSpan = document.getElementById('balanceSheetAssets');
+        const balanceSheetLiabilitiesSpan = document.getElementById('balanceSheetLiabilities');
+        const balanceSheetEquitySpan = document.getElementById('balanceSheetEquity');
+        const totalLiabilitiesAndEquitySpan = document.getElementById('totalLiabilitiesAndEquity');
+        const balanceCheckParagraph = document.getElementById('balanceCheck');
+
+        const saveButton = document.getElementById('saveButton');
+        const resetButton = document.getElementById('resetButton');
+        const localStorageKey = 'balanceSheetData';
+
+        function calculateBalanceSheet() {
+            let totalAssets = 0;
+            assetInputs.forEach(input => {
+                totalAssets += parseFloat(input.value) || 0;
+            });
+
+            let totalLiabilities = 0;
+            liabilityInputs.forEach(input => {
+                totalLiabilities += parseFloat(input.value) || 0;
+            });
+
+            let totalEquity = 0;
+            equityInputs.forEach(input => {
+                totalEquity += parseFloat(input.value) || 0;
+            });
+
+            const totalLiabilitiesAndEquity = totalLiabilities + totalEquity;
+
+            totalAssetsSpan.textContent = totalAssets.toFixed(2);
+            totalLiabilitiesSpan.textContent = totalLiabilities.toFixed(2);
+            totalEquitySpan.textContent = totalEquity.toFixed(2);
+
+            balanceSheetAssetsSpan.textContent = totalAssets.toFixed(2);
+            balanceSheetLiabilitiesSpan.textContent = totalLiabilities.toFixed(2);
+            balanceSheetEquitySpan.textContent = totalEquity.toFixed(2);
+            totalLiabilitiesAndEquitySpan.textContent = totalLiabilitiesAndEquity.toFixed(2);
+
+            if (totalAssets === totalLiabilitiesAndEquity) {
+                balanceCheckParagraph.textContent = "Balance Sheet is balanced!";
+                balanceCheckParagraph.className = "balanced";
+            } else {
+                balanceCheckParagraph.textContent = "Balance Sheet is NOT balanced!";
+                balanceCheckParagraph.className = "not-balanced";
+            }
+        }
+
+        function saveBalanceSheetData() {
+            const data = {};
+            assetInputs.forEach(input => {
+                data[input.id] = input.value;
+            });
+            liabilityInputs.forEach(input => {
+                data[input.id] = input.value;
+            });
+            equityInputs.forEach(input => {
+                data[input.id] = input.value;
+            });
+            localStorage.setItem(localStorageKey, JSON.stringify(data));
+            alert('Balance Sheet data saved!');
+        }
+
+        function loadBalanceSheetData() {
+            const storedData = localStorage.getItem(localStorageKey);
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                assetInputs.forEach(input => {
+                    if (data.hasOwnProperty(input.id)) {
+                        input.value = data[input.id];
+                    }
+                });
+                liabilityInputs.forEach(input => {
+                    if (data.hasOwnProperty(input.id)) {
+                        input.value = data[input.id];
+                    }
+                });
+                equityInputs.forEach(input => {
+                    if (data.hasOwnProperty(input.id)) {
+                        input.value = data[input.id];
+                    }
+                });
+                calculateBalanceSheet();
+            }
+        }
+
+        function resetBalanceSheet() {
+            assetInputs.forEach(input => input.value = 0);
+            liabilityInputs.forEach(input => input.value = 0);
+            equityInputs.forEach(input => input.value = 0);
+            calculateBalanceSheet();
+            localStorage.removeItem(localStorageKey);
+            alert('Balance Sheet data reset!');
+        }
+
+        assetInputs.forEach(input => input.addEventListener('change', calculateBalanceSheet));
+        liabilityInputs.forEach(input => input.addEventListener('change', calculateBalanceSheet));
+        equityInputs.forEach(input => input.addEventListener('change', calculateBalanceSheet));
+        saveButton.addEventListener('click', saveBalanceSheetData);
+        resetButton.addEventListener('click', resetBalanceSheet);
+
+        loadBalanceSheetData();
+    </script>
+</body>
+</html>
