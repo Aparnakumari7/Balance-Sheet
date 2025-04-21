@@ -295,158 +295,81 @@
     </div>
 
     <script>
-        const cashInput = document.getElementById('cash');
-        const shortTermInvestmentsInput = document.getElementById('shortTermInvestments');
-        const accountsReceivableInput = document.getElementById('accountsReceivable');
-        const inventoryInput = document.getElementById('inventory');
-        const prepaidExpensesInput = document.getElementById('prepaidExpenses');
-        const propertyPlantEquipmentInput = document.getElementById('propertyPlantEquipment');
-        const accumulatedDepreciationInput = document.getElementById('accumulatedDepreciation');
-        const intangibleAssetsInput = document.getElementById('intangibleAssets');
-        const longTermInvestmentsInput = document.getElementById('longTermInvestments');
-
-        const accountsPayableInput = document.getElementById('accountsPayable');
-        const salariesPayableInput = document.getElementById('salariesPayable');
-        const shortTermLoansInput = document.getElementById('shortTermLoans');
-        const unearnedRevenueInput = document.getElementById('unearnedRevenue');
-        const currentPortionLongTermDebtInput = document.getElementById('currentPortionLongTermDebt');
-        const longTermLoansLiabilityInput = document.getElementById('longTermLoansLiability');
-        const bondsPayableInput = document.getElementById('bondsPayable');
-        const deferredTaxLiabilitiesInput = document.getElementById('deferredTaxLiabilities');
-
-        const ownersCapitalInput = document.getElementById('ownersCapital');
-        const retainedEarningsInput = document.getElementById('retainedEarnings');
-
-        const assetInputs = [cashInput, shortTermInvestmentsInput, accountsReceivableInput, inventoryInput, prepaidExpensesInput, propertyPlantEquipmentInput, accumulatedDepreciationInput, intangibleAssetsInput, longTermInvestmentsInput];
-        const liabilityInputs = [accountsPayableInput, salariesPayableInput, shortTermLoansInput, unearnedRevenueInput, currentPortionLongTermDebtInput, longTermLoansLiabilityInput, bondsPayableInput, deferredTaxLiabilitiesInput];
-        const equityInputs = [ownersCapitalInput, retainedEarningsInput];
-
-        const totalCurrentAssetsSpan = document.getElementById('totalCurrentAssets');
-        const totalLongTermAssetsSpan = document.getElementById('totalLongTermAssets');
-        const totalAssetsSpan = document.getElementById('totalAssets');
-        const totalCurrentLiabilitiesSpan = document.getElementById('totalCurrentLiabilities');
-        const totalLongTermLiabilitiesSpan = document.getElementById('totalLongTermLiabilities');
-        const totalLiabilitiesSpan = document.getElementById('totalLiabilities');
-        const totalEquitySpan = document.getElementById('totalEquity');
-
-        const balanceSheetCurrentAssetsSpan = document.getElementById('balanceSheetCurrentAssets');
-        const balanceSheetLongTermAssetsSpan = document.getElementById('balanceSheetLongTermAssets');
-        const balanceSheetAssetsSpan = document.getElementById('balanceSheetAssets');
-        const balanceSheetCurrentLiabilitiesSpan = document.getElementById('balanceSheetCurrentLiabilities');
-        const balanceSheetLongTermLiabilitiesOutputSpan = document.getElementById('balanceSheetLongTermLiabilitiesOutput');
-        const balanceSheetLiabilitiesSpan = document.getElementById('balanceSheetLiabilities');
-        const balanceSheetEquitySpan = document.getElementById('balanceSheetEquity');
-        const totalLiabilitiesAndEquitySpan = document.getElementById('totalLiabilitiesAndEquity');
-        const balanceCheckParagraph = document.getElementById('balanceCheck');
-        const saveButton = document.getElementById('saveButton');
-        const resetButton = document.getElementById('resetButton');
-        const localStorageKey = 'balanceSheetData';
-
-        function calculateBalanceSheet() {
-            const cash = parseFloat(cashInput.value) || 0;
-            const shortTermInvestments = parseFloat(shortTermInvestmentsInput.value) || 0;
-            const accountsReceivable = parseFloat(accountsReceivableInput.value) || 0;
-            const inventory = parseFloat(inventoryInput.value) || 0;
-            const prepaidExpenses = parseFloat(prepaidExpensesInput.value) || 0;
-            const propertyPlantEquipment = parseFloat(propertyPlantEquipmentInput.value) || 0;
-            const accumulatedDepreciation = parseFloat(accumulatedDepreciationInput.value) || 0;
-            const intangibleAssets = parseFloat(intangibleAssetsInput.value) || 0;
-            const longTermInvestmentsAsset = parseFloat(longTermInvestmentsInput.value) || 0;
+             function calculateBalanceSheet() {
+            const cash = parseFloat(document.getElementById('cash').value) || 0;
+            const shortTermInvestments = parseFloat(document.getElementById('shortTermInvestments').value) || 0;
+            const accountsReceivable = parseFloat(document.getElementById('accountsReceivable').value) || 0;
+            const inventory = parseFloat(document.getElementById('inventory').value) || 0;
+            const prepaidExpenses = parseFloat(document.getElementById('prepaidExpenses').value) || 0;
 
             const totalCurrentAssets = cash + shortTermInvestments + accountsReceivable + inventory + prepaidExpenses;
-            const totalLongTermAssets = propertyPlantEquipment + accumulatedDepreciation + intangibleAssets + longTermInvestmentsAsset;
-            const totalAssets = totalCurrentAssets + totalLongTermAssets;
+            document.getElementById('totalCurrentAssets').textContent = totalCurrentAssets;
+            document.getElementById('balanceSheetCurrentAssets').textContent = totalCurrentAssets;
 
-            const accountsPayable = parseFloat(accountsPayableInput.value) || 0;
-            const salariesPayable = parseFloat(salariesPayableInput.value) || 0;
-            const shortTermLoans = parseFloat(shortTermLoansInputvalue) || 0;
-            const unearnedRevenue = parseFloat(unearnedRevenueInput.value) || 0;
-            const currentPortionLongTermDebt = parseFloat(currentPortionLongTermDebtInput.value) || 0;
-            const longTermLoansLiability = parseFloat(longTermLoansLiabilityInput.value) || 0;
-            const bondsPayable = parseFloat(bondsPayableInput.value) || 0;
-            const deferredTaxLiabilities = parseFloat(deferredTaxLiabilitiesInput.value) || 0;
+            const propertyPlantEquipment = parseFloat(document.getElementById('propertyPlantEquipment').value) || 0;
+            const accumulatedDepreciation = parseFloat(document.getElementById('accumulatedDepreciation').value) || 0;
+            const intangibleAssets = parseFloat(document.getElementById('intangibleAssets').value) || 0;
+            const longTermInvestments = parseFloat(document.getElementById('longTermInvestments').value) || 0;
+
+            const totalLongTermAssets = propertyPlantEquipment - accumulatedDepreciation + intangibleAssets + longTermInvestments;
+            document.getElementById('totalLongTermAssets').textContent = totalLongTermAssets;
+            document.getElementById('balanceSheetLongTermAssets').textContent = totalLongTermAssets;
+
+            const totalAssets = totalCurrentAssets + totalLongTermAssets;
+            document.getElementById('totalAssets').textContent = totalAssets;
+            document.getElementById('balanceSheetAssets').textContent = totalAssets;
+
+            const accountsPayable = parseFloat(document.getElementById('accountsPayable').value) || 0;
+            const salariesPayable = parseFloat(document.getElementById('salariesPayable').value) || 0;
+            const shortTermLoans = parseFloat(document.getElementById('shortTermLoans').value) || 0;
+            const unearnedRevenue = parseFloat(document.getElementById('unearnedRevenue').value) || 0;
+            const currentPortionLongTermDebt = parseFloat(document.getElementById('currentPortionLongTermDebt').value) || 0;
 
             const totalCurrentLiabilities = accountsPayable + salariesPayable + shortTermLoans + unearnedRevenue + currentPortionLongTermDebt;
-            const totalLongTermLiabilities = longTermLoansLiability + bondsPayable + deferredTaxLiabilities;
-            const totalLiabilities = totalCurrentLiabilities + totalLongTermLiabilities;
+            document.getElementById('totalCurrentLiabilities').textContent = totalCurrentLiabilities;
+            document.getElementById('balanceSheetCurrentLiabilities').textContent = totalCurrentLiabilities;
 
-            const ownersCapital = parseFloat(ownersCapitalInput.value) || 0;
-            const retainedEarnings = parseFloat(retainedEarningsInput.value) || 0;
+            const longTermLoansLiability = parseFloat(document.getElementById('longTermLoansLiability').value) || 0;
+            const bondsPayable = parseFloat(document.getElementById('bondsPayable').value) || 0;
+            const deferredTaxLiabilities = parseFloat(document.getElementById('deferredTaxLiabilities').value) || 0;
+
+            const totalLongTermLiabilities = longTermLoansLiability + bondsPayable + deferredTaxLiabilities;
+            document.getElementById('totalLongTermLiabilities').textContent = totalLongTermLiabilities;
+            document.getElementById('balanceSheetLongTermLiabilitiesOutput').textContent = totalLongTermLiabilities;
+
+            const totalLiabilities = totalCurrentLiabilities + totalLongTermLiabilities;
+            document.getElementById('totalLiabilities').textContent = totalLiabilities;
+            document.getElementById('balanceSheetLiabilities').textContent = totalLiabilities;
+
+            const ownersCapital = parseFloat(document.getElementById('ownersCapital').value) || 0;
+            const retainedEarnings = parseFloat(document.getElementById('retainedEarnings').value) || 0;
+
             const totalEquity = ownersCapital + retainedEarnings;
+            document.getElementById('totalEquity').textContent = totalEquity;
+            document.getElementById('balanceSheetEquity').textContent = totalEquity;
 
             const totalLiabilitiesAndEquity = totalLiabilities + totalEquity;
+            document.getElementById('totalLiabilitiesAndEquity').textContent = totalLiabilitiesAndEquity;
 
-            totalCurrentAssetsSpan.textContent = totalCurrentAssets.toFixed(2);
-            totalLongTermAssetsSpan.textContent = totalLongTermAssets.toFixed(2);
-            totalAssetsSpan.textContent = totalAssets.toFixed(2);
-            totalCurrentLiabilitiesSpan.textContent = totalCurrentLiabilities.toFixed(2);
-            totalLongTermLiabilitiesSpan.textContent = totalLongTermLiabilities.toFixed(2);
-            totalLiabilitiesSpan.textContent = totalLiabilities.toFixed(2);
-            totalEquitySpan.textContent = totalEquity.toFixed(2);
-
-            balanceSheetCurrentAssetsSpan.textContent = totalCurrentAssets.toFixed(2);
-            balanceSheetLongTermAssetsSpan.textContent = totalLongTermAssets.toFixed(2);
-            balanceSheetAssetsSpan.textContent = totalAssets.toFixed(2);
-            balanceSheetCurrentLiabilitiesSpan.textContent = totalCurrentLiabilities.toFixed(2);
-            balanceSheetLongTermLiabilitiesOutputSpan.textContent = totalLongTermLiabilities.toFixed(2);
-            balanceSheetLiabilitiesSpan.textContent = totalLiabilities.toFixed(2);
-            balanceSheetEquitySpan.textContent = totalEquity.toFixed(2);
-            totalLiabilitiesAndEquitySpan.textContent = totalLiabilitiesAndEquity.toFixed(2);
-
+            const balanceCheck = document.getElementById('balanceCheck');
             if (totalAssets === totalLiabilitiesAndEquity) {
-                balanceCheckParagraph.textContent = "Balance Sheet is balanced!";
-                balanceCheckParagraph.className = "balanced";
+                balanceCheck.textContent = 'Balanced!';
+                balanceCheck.className = 'balanced';
             } else {
-                balanceCheckParagraph.textContent = "Balance Sheet is NOT balanced!";
-                balanceCheckParagraph.className = "not-balanced";
-            }
-            updateLocalStorage();
-        }
-
-        function saveBalanceSheetData() {
-            const data = {};
-            assetInputs.forEach(input => data[input.id] = input.value);
-            liabilityInputs.forEach(input => data[input.id] = input.value);
-            equityInputs.forEach(input => data[input.id] = input.value);
-            localStorage.setItem(localStorageKey, JSON.stringify(data));
-            alert('Balance Sheet data saved!');
-        }
-
-        function loadBalanceSheetData() {
-            const storedData = localStorage.getItem(localStorageKey);
-            if (storedData) {
-                const data = JSON.parse(storedData);
-                assetInputs.forEach(input => { if (data.hasOwnProperty(input.id)) input.value = data[input.id]; });
-                liabilityInputs.forEach(input => { if (data.hasOwnProperty(input.id)) input.value = data[input.id]; });
-                equityInputs.forEach(input => { if (data.hasOwnProperty(input.id)) input.value = data[input.id]; });
-                calculateBalanceSheet();
+                balanceCheck.textContent = 'Not Balanced!';
+                balanceCheck.className = 'not-balanced';
             }
         }
 
-        function resetBalanceSheet() {
-            assetInputs.forEach(input => input.value = 0);
-            liabilityInputs.forEach(input => input.value = 0);
-            equityInputs.forEach(input => input.value = 0);
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => input.addEventListener('input', calculateBalanceSheet));
+
+        document.getElementById('resetButton').addEventListener('click', () => {
+            inputs.forEach(input => input.value = 0);
             calculateBalanceSheet();
-            localStorage.removeItem(localStorageKey);
-            alert('Balance Sheet data reset!');
-        }
+        });
 
-        function updateLocalStorage() {
-            const data = {};
-            assetInputs.forEach(input => data[input.id] = input.value);
-            liabilityInputs.forEach(input => data[input.id] = input.value);
-            equityInputs.forEach(input => data[input.id] = input.value);
-            localStorage.setItem(localStorageKey, JSON.stringify(data));
-        }
-
-        assetInputs.forEach(input => input.addEventListener('change', calculateBalanceSheet));
-        liabilityInputs.forEach(input => input.addEventListener('change', calculateBalanceSheet));
-        equityInputs.forEach(input => input.addEventListener('change', calculateBalanceSheet));
-        saveButton.addEventListener('click', saveBalanceSheetData);
-        resetButton.addEventListener('click', resetBalanceSheet);
-
-        loadBalanceSheetData();
+        window.addEventListener('DOMContentLoaded', calculateBalanceSheet);
     </script>
 </body>
 </html>
